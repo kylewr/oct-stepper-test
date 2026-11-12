@@ -57,10 +57,17 @@ access point.
 
 ## Dashboard controls
 
-Each axis has persistent reverse/forward continuous-run controls. While an axis
-is running, changing its speed or acceleration slider updates the target in
-place instead of restarting the move. The displayed RPM is calculated from the
-axis profile's effective pulses per revolution, including microstepping.
+Each axis has reverse/forward press-and-hold jog controls. Motion starts when a
+direction button is pressed and ramps to a stop when it is released, the page
+loses focus, or that browser disconnects. While an axis is jogging, changing
+its velocity or acceleration profile updates the target in place instead of
+restarting the move. The displayed RPM is calculated from the axis profile's
+effective pulses per revolution, including microstepping.
+
+The velocity slider uses a nonlinear scale, giving low step rates more travel
+while still reaching the axis profile's configured ceiling. Acceleration is a
+named choice: Gentle (250), Balanced (800), Quick (2500), or Aggressive (7500)
+steps/s², subject to the per-axis acceleration limit.
 
 The default 12 V starting profile is 400 pulses/s with 800 pulses/s²
 acceleration and a 1200 pulses/s profile ceiling. The firmware-wide ceiling is
@@ -79,6 +86,8 @@ position slider.
 - Every connected browser can issue commands immediately; there is no control
   lease or heartbeat. Finite moves and cycle tests continue if a page closes.
 - Emergency Stop and Disable All cancel every job and release shared ENABLE.
+- Pressing Space anywhere in the dashboard also cancels every job and disables
+  the drivers.
 - The HTTP/WebSocket interface is unauthenticated. Keep it on a trusted LAN and
   do not expose it to the internet.
 - A physical motor-power cutoff is still required. The web button is not a

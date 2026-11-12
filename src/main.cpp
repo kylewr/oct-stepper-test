@@ -11,6 +11,7 @@
 #include <ESPmDNS.h>
 #include <WiFi.h>
 
+#include <array>
 #include <cstdint>
 #include <cstring>
 
@@ -26,7 +27,7 @@ namespace {
     constexpr std::size_t kCommandBytes = 1024;
     constexpr std::size_t kCommandQueueLength = 12;
 
-    enum class NetworkEventType : std::uint8_t { Connected, Message };
+    enum class NetworkEventType : std::uint8_t { Connected, Disconnected, Message };
 
     struct NetworkEvent {
             NetworkEventType type = NetworkEventType::Message;
@@ -46,6 +47,7 @@ namespace {
     std::uint32_t lastWifiAttemptAt = 0;
     std::uint32_t restartAt = 0;
     bool mdnsStarted = false;
+    std::array<std::uint32_t, AppConfig::kMaxAxes> jogOwners {};
 
     const char* modeName(MotionPlanner::Mode mode) {
         switch (mode) {
@@ -247,8 +249,10 @@ namespace {
             enqueueNetworkEvent(NetworkEventType::Connected, client->id());
             return;
         }
-        if (type == WS_EVT_DISCONNECT)
+        if (type == WS_EVT_DISCONNECT) {
+            enqueueNetworkEvent(NetworkEventType::Disconnected, client->id());
             return;
+        }
         if (type != WS_EVT_DATA)
             return;
 
@@ -421,6 +425,7 @@ namespace {
         if (std::strcmp(type, "emergencyStop") == 0) {
             cycles.stopAll();
             motion.disableDrivers();
+            jogOwners.fill(0);
             sendAck(event.clientId, requestId);
             broadcastEvent("Emergency stop: all motion cancelled and drivers disabled");
             return;
@@ -436,6 +441,7 @@ namespace {
             } else {
                 cycles.stopAll();
                 motion.disableDrivers();
+                jogOwners.fill(0);
             }
             sendAck(event.clientId, requestId);
             return;
@@ -497,6 +503,7 @@ namespace {
         if (std::strcmp(type, "stopAxis") == 0 || std::strcmp(type, "stopCycle") == 0) {
             cancelCycle(axis);
             motion.stop(axis);
+            jogOwners[axis] = 0;
             sendAck(event.clientId, requestId);
             return;
         }
@@ -512,6 +519,7 @@ namespace {
         if (std::strcmp(type, "jogStop") == 0) {
             if (motion.isContinuous(axis))
                 motion.stop(axis);
+            jogOwners[axis] = 0;
             sendAck(event.clientId, requestId);
             return;
         }
@@ -534,6 +542,8 @@ namespace {
             cancelCycle(axis);
             accepted =
                 motion.moveBy(axis, payload["steps"].as<std::int64_t>(), speed, acceleration);
+            if (accepted)
+                jogOwners[axis] = 0;
         } else if (std::strcmp(type, "moveAbsolute") == 0) {
             if (!payload["steps"].is<std::int64_t>()) {
                 sendError(event.clientId, requestId, "invalid_argument",
@@ -543,6 +553,8 @@ namespace {
             cancelCycle(axis);
             accepted =
                 motion.moveTo(axis, payload["steps"].as<std::int64_t>(), speed, acceleration);
+            if (accepted)
+                jogOwners[axis] = 0;
         } else if (std::strcmp(type, "jogStart") == 0) {
             if (!payload["direction"].is<std::int8_t>()) {
                 sendError(event.clientId, requestId, "invalid_argument",
@@ -557,6 +569,8 @@ namespace {
             }
             cancelCycle(axis);
             accepted = motion.jog(axis, direction, speed, acceleration);
+            if (accepted)
+                jogOwners[axis] = event.clientId;
         } else if (std::strcmp(type, "startCycle") == 0) {
             if (!payload["travelSteps"].is<std::uint64_t>() ||
                 !payload["initialDirection"].is<std::int8_t>() ||
@@ -576,6 +590,8 @@ namespace {
                                     speed, acceleration, payload["dwellMs"].as<std::uint32_t>(),
                                     payload["repeats"].as<std::uint32_t>(),
                                     payload["infinite"].as<bool>(), millis());
+            if (accepted)
+                jogOwners[axis] = 0;
         } else {
             sendError(event.clientId, requestId, "unknown_command",
                       "Command type is not supported");
@@ -596,6 +612,14 @@ namespace {
             if (event.type == NetworkEventType::Connected) {
                 sendHello(event.clientId);
                 sendSnapshot(event.clientId);
+            } else if (event.type == NetworkEventType::Disconnected) {
+                for (std::size_t axis = 0; axis < motion.axisCount(); ++axis) {
+                    if (jogOwners[axis] == event.clientId) {
+                        if (motion.isContinuous(axis))
+                            motion.stop(axis);
+                        jogOwners[axis] = 0;
+                    }
+                }
             } else {
                 handleCommand(event);
             }

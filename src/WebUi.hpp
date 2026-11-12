@@ -13,7 +13,7 @@ const char WEB_UI[] PROGMEM = R"HTML(<!doctype html>
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}.shell{max-width:1500px;margin:auto;padding:16px}.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:5;padding:13px 0;background:#090d13ef}.top h1{font:700 19px system-ui;margin:0}.grow{flex:1}.status{display:flex;align-items:center;gap:7px;color:var(--muted)}.dot{width:9px;height:9px;border-radius:50%;background:var(--red)}.dot.on{background:var(--green)}
 button,input,select{font:inherit}button{border:1px solid var(--line);border-radius:9px;background:#1a2635;color:var(--text);padding:10px 13px;cursor:pointer;touch-action:none}button:hover{border-color:#55789f}button:disabled{opacity:.35;cursor:not-allowed}.primary{background:#0b3c4e;border-color:#187b99;color:#b1efff}.warn{background:#4b340c;border-color:#956b20;color:#ffe1a5}.danger{background:#51131e;border-color:#aa3044;color:#ffd7dc;font-weight:800}
 .bench-note{color:var(--muted);margin:0 0 12px}.axis-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px}.axis-grid.focus-mode{grid-template-columns:minmax(500px,1fr) 270px;align-items:start}.axis-grid.focus-mode .axis-card.focused{grid-column:1;grid-row:1/span 4}.axis-grid.focus-mode .axis-card:not(.focused){grid-column:2}.axis-grid.focus-mode .axis-card:not(.focused) .axis-controls{display:none}.axis-grid.focus-mode .axis-card:not(.focused) .readout{grid-template-columns:1fr;margin-bottom:0}.axis-grid.focus-mode .axis-card:not(.focused) .metric:nth-child(3){display:none}.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.hardware{margin-top:14px}.head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.head h2{font:700 18px system-ui;margin:0}.head .focus-button{margin-left:auto;padding:6px 9px;font-size:11px}.chip{padding:4px 8px;border-radius:99px;background:#202d3e;color:var(--muted);font-size:11px}.chip.running{color:var(--green);background:#103d31}.row{display:flex;gap:9px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:105px}.field label,.control-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}input,select{width:100%;min-width:0;padding:9px;border:1px solid var(--line);border-radius:8px;background:#0a111a;color:var(--text)}input[type=range]{padding:0;border:0;background:transparent;accent-color:var(--cyan)}
-.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 13px}.metric{background:#0b121c;border-radius:9px;padding:9px}.metric b{display:block;font-size:17px;color:#fff;overflow-wrap:anywhere}.metric small{color:var(--muted)}.slider-control{margin:10px 0}.slider-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:5px}.slider-value{color:var(--cyan)}.slider-inputs{display:grid;grid-template-columns:1fr 92px;gap:9px;align-items:center}.continuous{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin:12px 0}.continuous button{height:50px;font-size:15px}.continuous button.active{background:#103d31;border-color:#29996f;color:var(--green)}.move{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}.subtle{color:var(--muted);font-size:12px}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 13px}.metric{background:#0b121c;border-radius:9px;padding:9px}.metric b{display:block;font-size:17px;color:#fff;overflow-wrap:anywhere}.metric small{color:var(--muted)}.slider-control,.profile-control{margin:10px 0}.slider-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:5px}.slider-value{color:var(--cyan)}.slider-inputs{display:grid;grid-template-columns:1fr 92px;gap:9px;align-items:center}.profile-control select{margin-top:5px}.continuous{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin:12px 0}.continuous button{height:50px;font-size:15px}.continuous button.active{background:#103d31;border-color:#29996f;color:var(--green)}.move{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}.subtle{color:var(--muted);font-size:12px}
 details{border-top:1px solid var(--line);margin-top:14px;padding-top:11px}summary{cursor:pointer;color:#c6d7e9;font-weight:700;margin-bottom:12px}.actions{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}.pin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin-top:12px}.pins{padding:11px;background:#0b121c;border-radius:9px}.pins strong{display:block;margin-bottom:8px}.check{display:flex;align-items:center;gap:7px;margin-top:10px}.check input{width:auto}.toast{position:fixed;right:18px;bottom:18px;display:none;max-width:360px;padding:12px 15px;border-radius:10px;background:#42141d;border:1px solid var(--red);z-index:10}
 @media(max-width:720px){.shell{padding:10px}.top h1{width:100%}.axis-grid,.axis-grid.focus-mode{grid-template-columns:1fr}.axis-grid.focus-mode .axis-card.focused,.axis-grid.focus-mode .axis-card:not(.focused){grid-column:1;grid-row:auto}.card{padding:13px}.move{grid-template-columns:1fr auto}}
 </style>
@@ -27,7 +27,7 @@ details{border-top:1px solid var(--line);margin-top:14px;padding-top:11px}summar
   <button id="estop" class="danger" data-command>STOP ALL</button>
 </header>
 
-<p class="bench-note">12 V starting profile: 400 steps/s, 800 steps/s², 1200 steps/s default ceiling. Set the correct effective steps/revolution to make the RPM display meaningful.</p>
+<p class="bench-note">Hold a direction button to jog. Release it to stop. Press Space at any time to cancel motion and disable the drivers.</p>
 <section id="axisGrid" class="axis-grid"></section>
 
 <details class="card hardware" id="hardwarePanel">
@@ -51,6 +51,13 @@ details{border-top:1px solid var(--line);margin-top:14px;padding-top:11px}summar
 (()=>{'use strict';
 let socket,sequence=0,profiles=[],axisStates=[],hardware=null,driversEnabled=false,bridgeBackend=false,focusAxis=null;
 const liveTimers=[];
+const heldAxes=new Map();
+const accelerationProfiles=[
+  {name:'Gentle',value:250},
+  {name:'Balanced',value:800},
+  {name:'Quick',value:2500},
+  {name:'Aggressive',value:7500}
+];
 const $=selector=>document.querySelector(selector);
 const number=(value,fallback=0)=>Number.isFinite(Number(value))?Number(value):fallback;
 const escapeHtml=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -73,6 +80,7 @@ function setConnected(connected){
   $('#connDot').classList.toggle('on',connected);
   $('#connText').textContent=connected?'connected':'offline';
   document.querySelectorAll('[data-command]').forEach(button=>button.disabled=!connected);
+  if(!connected)clearHeldJogState();
 }
 
 function connect(){
@@ -115,6 +123,44 @@ function slider(label,field,value,min,max){
   </div>`;
 }
 
+function speedToSlider(value,max){
+  if(max<=1)return 0;
+  const speed=Math.min(max,Math.max(1,number(value,1)));
+  return Math.round(Math.log(speed)/Math.log(max)*1000);
+}
+
+function sliderToSpeed(value,max){
+  if(max<=1)return 1;
+  const raw=Math.pow(max,Math.min(1000,Math.max(0,number(value)))/1000);
+  const step=raw<100?1:raw<500?5:raw<2000?10:25;
+  return Math.min(max,Math.max(1,Math.round(raw/step)*step));
+}
+
+function speedControl(value,max){
+  const limit=Math.max(1,Math.trunc(number(max,1)));
+  const speed=Math.min(limit,Math.max(1,Math.trunc(number(value,1))));
+  return `<div class="slider-control">
+    <div class="slider-head"><span class="control-label">Velocity · steps/s</span><span class="slider-value" data-value-for="speed"></span></div>
+    <div class="slider-inputs">
+      <input type="range" data-role="speed-range" min="0" max="1000" step="1" data-speed-max="${limit}" value="${speedToSlider(speed,limit)}" aria-label="Velocity">
+      <input type="number" data-field="speed" min="1" max="${limit}" step="1" value="${speed}">
+    </div>
+    <div class="subtle">Fine control at low speed · configured maximum ${limit.toLocaleString()} steps/s</div>
+  </div>`;
+}
+
+function accelerationControl(value,max){
+  const limit=Math.max(1,Math.trunc(number(max,1)));
+  const selected=Math.min(limit,Math.max(1,Math.trunc(number(value,1))));
+  const choices=accelerationProfiles.filter(profile=>profile.value<=limit);
+  if(!choices.some(profile=>profile.value===selected))choices.push({name:'Saved',value:selected});
+  choices.sort((left,right)=>left.value-right.value);
+  return `<div class="profile-control">
+    <label class="control-label">Acceleration profile</label>
+    <select data-field="acceleration">${choices.map(profile=>`<option value="${profile.value}" ${profile.value===selected?'selected':''}>${profile.name} · ${profile.value.toLocaleString()} steps/s²</option>`).join('')}</select>
+  </div>`;
+}
+
 function renderAxisCards(){
   if(focusAxis!==null&&focusAxis>=profiles.length)focusAxis=null;
   $('#axisGrid').innerHTML=profiles.map((profile,axis)=>{
@@ -128,12 +174,12 @@ function renderAxisCards(){
         <div class="metric"><b data-output="angle">0.00°</b><small>shaft angle</small></div>
       </div>
       <div class="axis-controls">
-      ${slider('Speed · steps/s','speed',profile.defaultSpeed,1,profile.maxSpeed)}
-      ${slider('Acceleration · steps/s²','acceleration',profile.defaultAcceleration,1,profile.maxAcceleration)}
+      ${speedControl(profile.defaultSpeed,profile.maxSpeed)}
+      ${accelerationControl(profile.defaultAcceleration,profile.maxAcceleration)}
       <div class="continuous">
-        <button data-action="continuous" data-direction="-1" data-command>◀ RUN</button>
+        <button data-action="hold" data-direction="-1" data-command>◀ HOLD</button>
         <button data-action="stop" class="warn" data-command>STOP</button>
-        <button data-action="continuous" data-direction="1" data-command>RUN ▶</button>
+        <button data-action="hold" data-direction="1" data-command>HOLD ▶</button>
       </div>
       <div class="move">
         <div class="field"><label>Relative move · steps</label><input data-field="moveSteps" type="number" value="${profile.defaultJogSteps}"></div>
@@ -172,6 +218,11 @@ function field(card,name){return card.querySelector(`[data-field="${name}"]`)}
 function integer(card,name,fallback=0){return Math.trunc(number(field(card,name)?.value,fallback))}
 function motionValues(card){return{speed:integer(card,'speed'),acceleration:integer(card,'acceleration')}}
 
+function syncSpeedRange(card){
+  const range=card?.querySelector('[data-role="speed-range"]');
+  if(range)range.value=String(speedToSlider(integer(card,'speed',1),number(range.dataset.speedMax,1)));
+}
+
 function refreshControlValues(card){
   if(!card)return;
   const axis=Number(card.dataset.axisCard),profile=profiles[axis]||{},steps=Math.max(1,integer(card,'stepsPerRev',profile.stepsPerRevolution||200));
@@ -195,13 +246,29 @@ function applyFocus(){
 }
 
 function scheduleLiveMotion(axis,card){
-  const direction=Number(card.dataset.continuousDirection||0);
+  const direction=Number(card.dataset.heldDirection||0);
   if(!direction||liveTimers[axis])return;
   liveTimers[axis]=setTimeout(()=>{
     liveTimers[axis]=null;
-    const currentCard=axisCard(axis),currentDirection=Number(currentCard?.dataset.continuousDirection||0);
+    const currentCard=axisCard(axis),currentDirection=Number(currentCard?.dataset.heldDirection||0);
     if(currentCard&&currentDirection)send('jogStart',axis,{direction:currentDirection,...motionValues(currentCard)});
   },80);
+}
+
+function clearHeldJogState(axis=null){
+  const axes=axis===null?[...heldAxes.keys()]:[axis];
+  axes.forEach(currentAxis=>{
+    heldAxes.delete(currentAxis);
+    const card=axisCard(currentAxis);
+    if(card)card.dataset.heldDirection='0';
+  });
+}
+
+function stopHeldJog(axis,pointerId=null){
+  const held=heldAxes.get(axis);
+  if(!held||(pointerId!==null&&held.pointerId!==pointerId))return;
+  clearHeldJogState(axis);
+  send('jogStop',axis);
 }
 
 function updateAllReadouts(){
@@ -220,9 +287,7 @@ function updateAllReadouts(){
     out('motionState').textContent=names[state.mode]||'stopped';
     out('motionState').classList.toggle('running',state.mode!==0);
     out('referenceState').textContent=state.referenced?'zeroed':'uncertain';
-    if(state.mode===2)card.dataset.continuousDirection=state.direction>=0?'1':'-1';
-    else if(state.mode===0)card.dataset.continuousDirection='0';
-    card.querySelectorAll('[data-action="continuous"]').forEach(button=>button.classList.toggle('active',state.mode===2&&Number(button.dataset.direction)===Number(card.dataset.continuousDirection)));
+    card.querySelectorAll('[data-action="hold"]').forEach(button=>button.classList.toggle('active',state.mode===2&&Number(button.dataset.direction)===Number(state.direction)));
     const cycle=state.cycle||{},phases=['idle','moving out','dwelling out','moving back','dwelling back'];
     out('cycleStatus').textContent=cycle.infinite?`${phases[cycle.phase]||'idle'} · ${cycle.completed||0} / ∞`:`${phases[cycle.phase]||'idle'} · ${cycle.completed||0} / ${cycle.repeats||0}`;
   });
@@ -246,14 +311,46 @@ function renderHardware(){
 }
 
 $('#axisGrid').addEventListener('input',event=>{
-  const card=event.target.closest('[data-axis-card]'),name=event.target.dataset.field;
-  if(!card||!name)return;
+  const card=event.target.closest('[data-axis-card]');
+  if(!card)return;
+  if(event.target.dataset.role==='speed-range'){
+    const speed=sliderToSpeed(event.target.value,number(event.target.dataset.speedMax,1));
+    field(card,'speed').value=String(speed);
+    refreshControlValues(card);
+    scheduleLiveMotion(Number(card.dataset.axisCard),card);
+    return;
+  }
+  const name=event.target.dataset.field;
+  if(!name)return;
   if(event.target.type==='range'||event.target.type==='number'){
     card.querySelectorAll(`[data-field="${name}"]`).forEach(input=>{if(input!==event.target)input.value=event.target.value});
-    refreshControlValues(card);
-    if(name==='speed'||name==='acceleration')scheduleLiveMotion(Number(card.dataset.axisCard),card);
   }
+  if(name==='speed')syncSpeedRange(card);
+  refreshControlValues(card);
+  if(name==='speed'||name==='acceleration')scheduleLiveMotion(Number(card.dataset.axisCard),card);
 });
+
+$('#axisGrid').addEventListener('pointerdown',event=>{
+  const button=event.target.closest('button[data-action="hold"]');
+  if(!button||button.disabled||(event.button!==undefined&&event.button!==0))return;
+  event.preventDefault();
+  const card=button.closest('[data-axis-card]'),axis=Number(card.dataset.axisCard);
+  clearHeldJogState(axis);
+  heldAxes.set(axis,{pointerId:event.pointerId});
+  card.dataset.heldDirection=button.dataset.direction;
+  button.setPointerCapture?.(event.pointerId);
+  send('jogStart',axis,{direction:Number(button.dataset.direction),...motionValues(card)});
+});
+
+const releaseHeldPointer=event=>{
+  const button=event.target.closest?.('button[data-action="hold"]');
+  if(!button)return;
+  const card=button.closest('[data-axis-card]');
+  stopHeldJog(Number(card.dataset.axisCard),event.pointerId);
+};
+$('#axisGrid').addEventListener('pointerup',releaseHeldPointer);
+$('#axisGrid').addEventListener('pointercancel',releaseHeldPointer);
+$('#axisGrid').addEventListener('lostpointercapture',releaseHeldPointer);
 
 $('#axisGrid').addEventListener('click',event=>{
   const button=event.target.closest('button[data-action]');
@@ -264,27 +361,17 @@ $('#axisGrid').addEventListener('click',event=>{
     applyFocus();
     return;
   }
-  if(action==='continuous'){
-    const direction=Number(button.dataset.direction);
-    if(Number(card.dataset.continuousDirection)===direction){
-      card.dataset.continuousDirection='0';
-      send('jogStop',axis);
-    }else{
-      card.dataset.continuousDirection=String(direction);
-      send('jogStart',axis,{direction,...motionValues(card)});
-    }
-  }
   if(action==='move'){
-    card.dataset.continuousDirection='0';
+    clearHeldJogState(axis);
     send('moveRelative',axis,{steps:integer(card,'moveSteps'),...motionValues(card)});
   }
   if(action==='stop'){
-    card.dataset.continuousDirection='0';
+    clearHeldJogState(axis);
     send('stopAxis',axis);
   }
   if(action==='zero')send('zeroPosition',axis);
   if(action==='cycleStart'){
-    card.dataset.continuousDirection='0';
+    clearHeldJogState(axis);
     send('startCycle',axis,{travelSteps:Math.abs(integer(card,'cycleTravel')),initialDirection:1,dwellMs:Math.max(0,integer(card,'cycleDwell')),repeats:Math.max(1,integer(card,'cycleRepeats',1)),infinite:!!field(card,'cycleInfinite').checked,...motionValues(card)});
   }
   if(action==='cycleStop')send('stopCycle',axis);
@@ -293,8 +380,25 @@ $('#axisGrid').addEventListener('click',event=>{
   }
 });
 
-$('#drivers').onclick=()=>send('setDrivers',null,{enabled:!driversEnabled});
-$('#estop').onclick=()=>send('emergencyStop');
+$('#drivers').onclick=()=>{
+  if(driversEnabled)clearHeldJogState();
+  send('setDrivers',null,{enabled:!driversEnabled});
+};
+$('#estop').onclick=()=>{
+  clearHeldJogState();
+  send('emergencyStop');
+};
+window.addEventListener('keydown',event=>{
+  if(event.code!=='Space'||event.repeat||event.altKey||event.ctrlKey||event.metaKey)return;
+  event.preventDefault();
+  clearHeldJogState();
+  send('setDrivers',null,{enabled:false});
+  toast('Drivers disabled by Space');
+});
+window.addEventListener('blur',()=>[...heldAxes.keys()].forEach(axis=>stopHeldJog(axis)));
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden)[...heldAxes.keys()].forEach(axis=>stopHeldJog(axis));
+});
 $('#saveHardware').onclick=()=>{
   const axes=(hardware?.axes||[]).map((_,index)=>({
     stepPin:Math.trunc(number(document.querySelector(`.step-pin[data-axis="${index}"]`)?.value,-1)),
